@@ -1,0 +1,54 @@
+[build]
+  # Build komutu
+  command = "npm run build"
+  
+  # Build çıktı dizini (Vite varsayılan olarak dist kullanır)
+  publish = "dist"
+  
+  # Node.js versiyonu
+  [build.environment]
+    NODE_VERSION = "18"
+
+# SPA (Single Page Application) için redirect kuralları
+# React Router client-side routing için tüm istekleri index.html'e yönlendirir
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers - Güvenlik ve performans için
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# Statik dosyalar için cache ayarları
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# HTML dosyaları için cache ayarları
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Font dosyaları için cache
+[[headers]]
+  for = "/*.woff2"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# CORS headers (Supabase için gerekli olabilir)
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
+
